@@ -1,8 +1,6 @@
 ﻿using AviasalesApi.Models;
-using BCrypt.Net;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -14,7 +12,6 @@ namespace AviasalesApi.Endpoints
         public static void MapUsersEndpoints(this IEndpointRouteBuilder app)
         {
             var userGroup = app.MapGroup("api/users");
-            userGroup.RequireAuthorization("user");
 
             userGroup.MapGet("", GetUsers);
             //userGroup.MapGet("{id}", GetUser);
@@ -22,6 +19,7 @@ namespace AviasalesApi.Endpoints
             //userGroup.MapDelete("{id}", DeleteUser);
 
             var authGroup = app.MapGroup("auth");
+            authGroup.AllowAnonymous();
             authGroup.MapPut("register", Register);
             authGroup.MapPost("login", Login);
         }
@@ -65,7 +63,10 @@ namespace AviasalesApi.Endpoints
 
         private static string CreateToken(User user)
         {
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Name)};
+            var claims = new List<Claim> { 
+                new(ClaimTypes.Name, user.Name),
+                new(ClaimTypes.Role, "User")
+            };
 
             IConfigurationRoot configuration = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
