@@ -63,8 +63,7 @@ namespace AviasalesApi.Endpoints
 
         private static string CreateToken(User user)
         {
-            var claims = new List<Claim> { 
-                new(ClaimTypes.Name, user.Name),
+            var claims = new List<Claim> {
                 new(ClaimTypes.Role, "User")
             };
 
@@ -74,7 +73,7 @@ namespace AviasalesApi.Endpoints
             .Build();
             
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("AppSettings:Token").Value!));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
             var token = new JwtSecurityToken(
                     claims: claims,
                     expires: DateTime.Now.AddDays(1),

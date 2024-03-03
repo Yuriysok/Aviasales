@@ -3,22 +3,15 @@ using AviasalesApi.Endpoints;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Filters;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthentication().AddJwtBearer();
-builder.Services.AddAuthorization(options =>
-{
-    options.FallbackPolicy = new AuthorizationPolicyBuilder()
-    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-    .RequireAuthenticatedUser()
-    .Build();
-});
-//builder.Services.AddAuthorizationBuilder()
-//  .AddPolicy("UserPolicy", policy =>
-//        policy
-//            .RequireRole("User")
-//            .RequireClaim("Name"));
+builder.Services.AddAuthorizationBuilder()
+  .AddFallbackPolicy("UserPolicy", policy =>
+    policy.RequireClaim(ClaimTypes.Role, "User"));
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
