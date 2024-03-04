@@ -1,7 +1,6 @@
 using AviasalesApi;
-using AviasalesApi.Endpoints;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
+using Carter;
+using Serilog;
 using Swashbuckle.AspNetCore.Filters;
 using System.Security.Claims;
 
@@ -19,14 +18,21 @@ builder.Services.AddSwaggerGen(options =>
     {
         In = Microsoft.OpenApi.Models.ParameterLocation.Header,
         Name = "Authorization",
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
     });
-
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 builder.Services.AddDbContext<DataContext>();
+builder.Services.AddCarter();
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration).CreateLogger();
+
+builder.Host.UseSerilog();
 
 var app = builder.Build();
+
+app.UseSerilogRequestLogging();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -34,10 +40,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.MapUsersEndpoints();
+//var userEndpointsService = (IUsersEndpoints)app.Services.GetService(typeof(IUsersEndpoints))!;
+//userEndpointsService.MapUsersEndpoints(app);
+
+app.MapCarter();
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.UseHttpsRedirection();
-
 app.Run();

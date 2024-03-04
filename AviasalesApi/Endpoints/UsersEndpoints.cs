@@ -1,5 +1,7 @@
 ﻿using AviasalesApi.Models;
+using Carter;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -7,9 +9,9 @@ using System.Text;
 
 namespace AviasalesApi.Endpoints
 {
-    public static class UsersEndpoints
+    public class UsersEndpoints : ICarterModule
     {
-        public static void MapUsersEndpoints(this IEndpointRouteBuilder app)
+        public void AddRoutes(IEndpointRouteBuilder app)
         {
             var userGroup = app.MapGroup("api/users");
 
@@ -24,27 +26,33 @@ namespace AviasalesApi.Endpoints
             authGroup.MapPost("login", Login);
         }
 
-        private static async Task<Results<Ok, BadRequest>> Register(DataContext context, UserDto userDto)
+        private async Task<Results<Ok, BadRequest<string>>> Register(DataContext context, UserDto userDto)
         {
+            const int DuplicateInsertErrorNumber = 2601;
+
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
-            var newUser = new User 
-            { 
+            var newUser = new User
+            {
                 Name = userDto.Name,
                 PasswordHash = passwordHash
             };
+            ;
+            context.Users.Add(newUser);
+
             try
             {
-                context.Users.Add(newUser);
                 await context.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch (DbUpdateException ex)
             {
-                TypedResults.BadRequest("Name is not unique");
+                if (((SqlException)ex.InnerException!).Number == DuplicateInsertErrorNumber)
+                    return TypedResults.BadRequest($"Name \"{userDto.Name}\" is not unique");
+                throw;
             }
             return TypedResults.Ok();
         }
 
-        private static async Task<Results<Ok<string>, BadRequest<string>>> Login(DataContext context, UserDto userDto)
+        private async Task<Results<Ok<string>, BadRequest<string>>> Login(DataContext context, UserDto userDto)
         {
             var badRequestError = TypedResults.BadRequest("Wrong login or password");
 
@@ -52,7 +60,8 @@ namespace AviasalesApi.Endpoints
             if (user == null)
                 return badRequestError;
 
-            if (!BCrypt.Net.BCrypt.Verify(userDto.Password, user.PasswordHash)) {
+            if (!BCrypt.Net.BCrypt.Verify(userDto.Password, user.PasswordHash))
+            {
                 return badRequestError;
             }
 
@@ -61,17 +70,18 @@ namespace AviasalesApi.Endpoints
             return TypedResults.Ok(token);
         }
 
-        private static string CreateToken(User user)
+        private string CreateToken(User user)
         {
             var claims = new List<Claim> {
-                new(ClaimTypes.Role, "User")
+                new(ClaimTypes.Role, "User"),
+                new(ClaimTypes.Name, user.Name)
             };
 
             IConfigurationRoot configuration = new ConfigurationBuilder()
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
             .AddJsonFile("appsettings.json")
             .Build();
-            
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("AppSettings:Token").Value!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
             var token = new JwtSecurityToken(
@@ -82,12 +92,12 @@ namespace AviasalesApi.Endpoints
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private static async Task<Ok<List<User>>> GetUsers(DataContext context)
+        private async Task<Ok<List<User>>> GetUsers(DataContext context)
         {
             return TypedResults.Ok(await context.Users.ToListAsync());
         }
 
-        private static async Task<Results<Ok<User>, NotFound<string>>> GetUser(DataContext context, int id)
+        private async Task<Results<Ok<User>, NotFound<string>>> GetUser(DataContext context, int id)
         {
             var result = await context.Users.FindAsync(id);
             return result != null
@@ -95,14 +105,14 @@ namespace AviasalesApi.Endpoints
                 : TypedResults.NotFound($"User with id = {id} not found");
         }
 
-        private static async Task<IResult> PutUser(DataContext context, User user)
+        private async Task<IResult> PutUser(DataContext context, User user)
         {
             context.Users.Add(user);
             await context.SaveChangesAsync();
             return Results.Ok();
         }
 
-        private static async Task<IResult> DeleteUser(DataContext context, int id)
+        private async Task<IResult> DeleteUser(DataContext context, int id)
         {
             context.Users.Where(user => user.Id == id).ExecuteDelete();
             await context.SaveChangesAsync();
