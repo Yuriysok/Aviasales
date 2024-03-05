@@ -11,6 +11,12 @@ namespace AviasalesApi.Endpoints
 {
     public class UsersEndpoints : ICarterModule
     {
+        private readonly IConfiguration _config;
+
+        public UsersEndpoints(IConfiguration config)
+        {
+            _config = config;
+        }
         public void AddRoutes(IEndpointRouteBuilder app)
         {
             var userGroup = app.MapGroup("api/users");
@@ -77,12 +83,8 @@ namespace AviasalesApi.Endpoints
                 new(ClaimTypes.Name, user.Name)
             };
 
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-            .AddJsonFile("appsettings.json")
-            .Build();
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("AppSettings:Token").Value!));
+            var jwt = _config.GetValue<string>("Jwt")!;
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
             var token = new JwtSecurityToken(
                     claims: claims,

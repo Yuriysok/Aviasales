@@ -1,18 +1,16 @@
 ﻿global using Microsoft.EntityFrameworkCore;
 using AviasalesApi.Models;
+using System.CodeDom;
 
 namespace AviasalesApi
 {
-    public class DataContext(DbContextOptions options) : DbContext(options)
+    public class DataContext(DbContextOptions options, IConfiguration config) : DbContext(options)
     {
+        private readonly IConfiguration _config = config;
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            base.OnConfiguring(optionsBuilder);
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-            .AddJsonFile("appsettings.json")
-            .Build();
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            optionsBuilder.UseSqlServer(_config.GetConnectionString("DefaultConnection"));
         }
 
         public DbSet<User> Users => Set<User>();
