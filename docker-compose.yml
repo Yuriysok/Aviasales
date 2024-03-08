@@ -1,0 +1,23 @@
+version: '3.4'
+
+services:
+  aviasalesapi:
+    image: ${DOCKER_REGISTRY-}aviasalesapi
+    build:
+      context: .
+      dockerfile: AviasalesApi/Dockerfile
+    ports:
+     - "8080:8080"
+     - "8081:8081"
+
+  aviasales.database:
+    image: postgres:alpine
+    container_name: aviasalesDb
+    environment:
+     - POSTGRES_DB=aviasales
+     - POSTGRES_USER=postgres
+     - POSTGRES_PASSWORD=postgres
+    volumes:
+     - ./.containers/aviasalesDb:/var/lib/postgresql/data
+    ports:
+     - 5432:5432

@@ -1,4 +1,5 @@
 using AviasalesApi;
+using AviasalesApi.Extensions;
 using Carter;
 using Serilog;
 using Swashbuckle.AspNetCore.Filters;
@@ -39,9 +40,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.ApplyMigrations();
 }
-//var userEndpointsService = (IUsersEndpoints)app.Services.GetService(typeof(IUsersEndpoints))!;
-//userEndpointsService.MapUsersEndpoints(app);
 
 app.MapCarter();
 app.UseAuthentication();
