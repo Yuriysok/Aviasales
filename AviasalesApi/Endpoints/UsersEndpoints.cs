@@ -2,6 +2,8 @@
 using Carter;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -9,19 +11,13 @@ using System.Text;
 
 namespace AviasalesApi.Endpoints
 {
-    public class UsersEndpoints : ICarterModule
+    public class UsersEndpoints(IConfiguration config) : ICarterModule
     {
-        private readonly IConfiguration _config;
-
-        public UsersEndpoints(IConfiguration config)
-        {
-            _config = config;
-        }
         public void AddRoutes(IEndpointRouteBuilder app)
         {
             var userGroup = app.MapGroup("api/users");
 
-            userGroup.MapGet("", GetUsers);
+            userGroup.MapGet("", GetUsers).AllowAnonymous();
             //userGroup.MapGet("{id}", GetUser);
             //userGroup.MapPut("", PutUser);
             //userGroup.MapDelete("{id}", DeleteUser);
@@ -83,7 +79,7 @@ namespace AviasalesApi.Endpoints
                 new(ClaimTypes.Name, user.Name)
             };
 
-            var jwt = _config.GetValue<string>("Jwt")!;
+            var jwt = config.GetValue<string>("Jwt")!;
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
             var token = new JwtSecurityToken(
@@ -94,9 +90,16 @@ namespace AviasalesApi.Endpoints
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private async Task<Ok<List<User>>> GetUsers(DataContext context)
+        private async Task<Ok<List<User>>> GetUsers(DataContext context, IDistributedCache cache, CancellationToken ct)
         {
-            return TypedResults.Ok(await context.Users.ToListAsync());
+            var users = await cache.GetAsync("users",
+                async token =>
+                {
+                    var users = await context.Users.ToListAsync(token);
+                    return users;
+                }, Options.CacheOptions.DefaultExpiration, ct);
+
+            return TypedResults.Ok(users);
         }
 
         private async Task<Results<Ok<User>, NotFound<string>>> GetUser(DataContext context, int id)
