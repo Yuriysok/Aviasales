@@ -1,6 +1,5 @@
 ﻿global using Microsoft.EntityFrameworkCore;
 using AviasalesApi.Models;
-using System.CodeDom;
 
 namespace AviasalesApi
 {
@@ -10,7 +9,7 @@ namespace AviasalesApi
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(_config.GetConnectionString("DefaultConnection"));
+            optionsBuilder.UseNpgsql(_config.GetConnectionString("PostgresConnection"));
         }
 
         public DbSet<User> Users => Set<User>();
