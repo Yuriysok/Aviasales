@@ -1,6 +1,6 @@
 ﻿namespace AviasalesApi.Models
 {
-    public class UserDto
+    public record UserDto
     {
         public required string Name { get; set; }
         public required string Password { get; set; }

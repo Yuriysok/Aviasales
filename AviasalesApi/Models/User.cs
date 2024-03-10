@@ -1,6 +1,4 @@
-﻿using System.Security.Policy;
-
-namespace AviasalesApi.Models
+﻿namespace AviasalesApi.Models
 {
     [Index(nameof(Name), IsUnique = true)]
     public class User
