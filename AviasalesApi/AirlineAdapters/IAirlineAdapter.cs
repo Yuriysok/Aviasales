@@ -8,7 +8,5 @@ namespace AviasalesApi.AirlineAdapters
         string Endpoint { get; }
 
         Task<List<Flight>> GetFlightsAsync(GetFlightsDto getFlightsDto, HttpClient http);
-
-        string ConstructRequestUrl(GetFlightsDto getFlightsDto);
     }
 }
