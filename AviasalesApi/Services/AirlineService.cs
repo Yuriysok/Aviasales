@@ -20,7 +20,7 @@ namespace AviasalesApi.Services
 
             foreach (var adapter in _adapters)
             {
-                tasks.Add(adapter.GetFlightsAsync(getFlightsDto, Http));
+                tasks.Add(GetFlights(adapter, getFlightsDto));
             }
 
             var flights = await Task.WhenAll(tasks);
@@ -28,19 +28,14 @@ namespace AviasalesApi.Services
             var result = flights.SelectMany(x => x);
 
             return result;
+        }
 
-            //var stubFlights = new List<Flight>
-            //{
-            //    new Flight
-            //    {
-            //        Airline = Airline.Aeroflot,
-            //        Departure = new DateTime(2024, 1, 1),
-            //        Arrival = new DateTime(2024, 1, 2),
-            //        PriceUsd = 20
-
-            //    }
-            //};
-            //return flights;
+        private async Task<List<Flight>> GetFlights(IAirlineAdapter adapter, GetFlightsDto getFlightsDto)
+        {
+            var url = adapter.ConstructRequestUrl(getFlightsDto);
+            var response = await Http.GetAsync(url);
+            var dtos = await response.Content.ReadFromJsonAsync(adapter.ResponseType);
+            return (List<Flight>)adapter.Mapper.Map(dtos, adapter.ResponseType, typeof(List<Flight>));
         }
     }
 }

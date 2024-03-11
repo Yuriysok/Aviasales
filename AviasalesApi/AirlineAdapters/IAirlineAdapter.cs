@@ -5,8 +5,9 @@ namespace AviasalesApi.AirlineAdapters
 {
     public interface IAirlineAdapter
     {
+        Type ResponseType { get; }
         string Endpoint { get; }
-
-        Task<List<Flight>> GetFlightsAsync(GetFlightsDto getFlightsDto, HttpClient http);
+        IMapper Mapper { get; }
+        string ConstructRequestUrl(GetFlightsDto dto);
     }
 }

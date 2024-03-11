@@ -1,5 +1,12 @@
-{
-  "Price": 20,
-  "Departure": "2024-01-01T18:25:43.511Z",
-  "Arrival": "2024-01-02T18:25:43.511Z"
-}
+[
+  {
+    "PriceDollars": 20,
+    "DepartureTime": "2024-01-01T18:25:43.511Z",
+    "ArrivalTime": "2024-01-02T18:25:43.511Z"
+  },
+  {
+    "PriceDollars": 30,
+    "DepartureTime": "2024-01-01T20:25:43.511Z",
+    "ArrivalTime": "2024-01-02T20:25:43.511Z"
+  }
+]
