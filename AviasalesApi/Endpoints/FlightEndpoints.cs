@@ -13,10 +13,10 @@ namespace AviasalesApi.Endpoints
             userGroup.MapGet("", GetFlights);
         }
 
-        private async Task<Ok<List<Flight>>> GetFlights(DataContext context, [AsParameters]GetFlightsDto getFlightsDto)
+        private async Task<Ok<IEnumerable<Flight>>> GetFlights(DataContext context, [AsParameters]GetFlightsDto getFlightsDto)
         {
 
-            var flights = await _airlineService.GetFlightsAsync(getFlightsDto);
+            var flights = await _airlineService.GetAllFlightsAsync(getFlightsDto);
             return TypedResults.Ok(flights);
         }
     }

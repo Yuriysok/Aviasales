@@ -4,6 +4,6 @@ namespace AviasalesApi.Services
 {
     public interface IAirlineService
     {
-        Task<List<Flight>> GetFlightsAsync(GetFlightsDto getFlightsDto);
+        Task<IEnumerable<Flight>> GetAllFlightsAsync(GetFlightsDto getFlightsDto);
     }
 }

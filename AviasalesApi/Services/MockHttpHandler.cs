@@ -1,9 +1,4 @@
-﻿
-using Moq;
-using System.IO;
-using System.Security.Policy;
-
-namespace AviasalesApi.Services
+﻿namespace AviasalesApi.Services
 {
     public class MockHttpHandler : HttpMessageHandler
     {
