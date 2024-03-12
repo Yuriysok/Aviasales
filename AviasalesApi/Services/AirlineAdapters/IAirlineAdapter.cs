@@ -6,8 +6,7 @@ namespace AviasalesApi.Services.AirlineAdapters
     public interface IAirlineAdapter
     {
         Type ResponseType { get; }
-        string Endpoint { get; }
-        IMapper Mapper { get; }
+        IMapper ResponseMapper { get; }
         string ConstructRequestUrl(GetFlightsDto dto);
     }
 }
