@@ -15,8 +15,7 @@ namespace AviasalesApi.Endpoints
 
         private async Task<Ok<IEnumerable<Flight>>> GetFlights(DataContext context, [AsParameters]GetFlightsDto getFlightsDto)
         {
-
-            var flights = await _airlineService.GetAllFlightsAsync(getFlightsDto);
+            var flights = await _airlineService.GetAllFlightsAsync(getFlightsDto, sortOptions: getFlightsDto.SortOptions);
             return TypedResults.Ok(flights);
         }
     }
