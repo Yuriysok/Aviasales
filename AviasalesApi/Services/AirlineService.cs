@@ -1,18 +1,11 @@
-﻿using AviasalesApi.AirlineAdapters;
-using AviasalesApi.Models;
-using Moq;
+﻿using AviasalesApi.Models;
+using AviasalesApi.Services.AirlineAdapters;
 namespace AviasalesApi.Services
 {
-    public class AirlineService : IAirlineService
+    public class AirlineService(IEnumerable<IAirlineAdapter> adapters) : IAirlineService
     {
-        private readonly HttpClient Http;
-        private readonly IEnumerable<IAirlineAdapter> _adapters;
-
-        public AirlineService(IEnumerable<IAirlineAdapter> adapters)
-        {
-            _adapters = adapters;
-            Http = new HttpClient(new MockHttpHandler());
-        }
+        private readonly HttpClient Http = new HttpClient(new MockHttpHandler());
+        private readonly IEnumerable<IAirlineAdapter> _adapters = adapters;
 
         public async Task<IEnumerable<Flight>> GetAllFlightsAsync(GetFlightsDto getFlightsDto)
         {
@@ -34,8 +27,8 @@ namespace AviasalesApi.Services
         {
             var url = adapter.ConstructRequestUrl(getFlightsDto);
             var response = await Http.GetAsync(url);
-            var dtos = await response.Content.ReadFromJsonAsync(adapter.ResponseType);
-            return (List<Flight>)adapter.Mapper.Map(dtos, adapter.ResponseType, typeof(List<Flight>));
+            var airlineFlightList = await response.Content.ReadFromJsonAsync(adapter.ResponseType);
+            return (List<Flight>)adapter.Mapper.Map(airlineFlightList, adapter.ResponseType, typeof(List<Flight>));
         }
     }
 }

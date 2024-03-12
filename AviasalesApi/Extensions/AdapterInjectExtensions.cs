@@ -1,4 +1,4 @@
-﻿using AviasalesApi.AirlineAdapters;
+﻿using AviasalesApi.Services.AirlineAdapters;
 
 namespace AviasalesApi.Extensions
 {

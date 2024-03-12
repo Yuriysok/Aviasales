@@ -4,6 +4,6 @@
     {
         Aeroflot,
         Lufthansa,
-        UzbekistanAirways
+        UzAirways
     }
 }

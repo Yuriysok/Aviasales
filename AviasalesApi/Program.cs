@@ -1,5 +1,4 @@
 using AviasalesApi;
-using AviasalesApi.AirlineAdapters;
 using AviasalesApi.Extensions;
 using AviasalesApi.Services;
 using Carter;
@@ -28,9 +27,6 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddDbContext<DataContext>();
 builder.Services.AddStackExchangeRedisCache(options =>
     options.Configuration = builder.Configuration.GetConnectionString("Cache"));
-//builder.Services.AddTransient<IAirlineAdapter, AeroflotAdapter>();
-//builder.Services.AddTransient<IAirlineAdapter, LufthansaAdapter>();
-//builder.Services.AddTransient<IAirlineAdapter, AeroflotAdapter>();
 builder.Services.AddTransient<IAirlineService, AirlineService>();
 builder.Services.AddCarter();
 builder.Services.AddAdapters();

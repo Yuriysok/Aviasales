@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using AviasalesApi.Models;
 
-namespace AviasalesApi.AirlineAdapters
+namespace AviasalesApi.Services.AirlineAdapters
 {
     public interface IAirlineAdapter
     {
