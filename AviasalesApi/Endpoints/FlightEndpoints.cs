@@ -1,7 +1,9 @@
-﻿using AviasalesApi.Models;
+﻿using AviasalesApi.Endpoints.Helpers;
+using AviasalesApi.Models;
 using AviasalesApi.Services;
 using Carter;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.OpenApi.Models;
 
 namespace AviasalesApi.Endpoints
 {
@@ -10,10 +12,11 @@ namespace AviasalesApi.Endpoints
         public void AddRoutes(IEndpointRouteBuilder app)
         {
             var userGroup = app.MapGroup("api/flights");
-            userGroup.MapGet("", GetFlights);
+            userGroup.MapGet("", GetFlights)
+                .WithOpenApiCustomParameters(typeof(GetFlightsDto));
         }
 
-        private async Task<Ok<IEnumerable<Flight>>> GetFlights(DataContext context, [AsParameters]GetFlightsDto getFlightsDto)
+        private async Task<Ok<IEnumerable<Flight>>> GetFlights(DataContext context, GetFlightsDto getFlightsDto)
         {
             var flights = await _airlineService.GetAllFlightsAsync(getFlightsDto, sortOptions: getFlightsDto.SortOptions);
             return TypedResults.Ok(flights);

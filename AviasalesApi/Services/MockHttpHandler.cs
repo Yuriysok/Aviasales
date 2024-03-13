@@ -26,6 +26,5 @@
                 "www.uzairways.com" => (300, "UzAirways.json"),
                 _ => throw new NotSupportedException()
             };
-
     }
 }

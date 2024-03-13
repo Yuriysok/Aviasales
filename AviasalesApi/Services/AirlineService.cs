@@ -39,12 +39,10 @@ namespace AviasalesApi.Services
             return (List<Flight>)adapter.ResponseMapper.Map(airlineFlightList, adapter.ResponseType, typeof(List<Flight>));
         }
 
-        private static IEnumerable<Flight> FilterResult(IEnumerable<Flight> result, FilterOptions? optionsNullable)
+        private static IEnumerable<Flight> FilterResult(IEnumerable<Flight> result, FilterOptions? options)
         {
-            if (optionsNullable == null)
+            if (options == null)
                 return result;
-
-            var options = optionsNullable.Value;
 
             if (options.PriceFrom != 0)
                 result = result.Where(x => x.PriceUsd >= options.PriceFrom);
