@@ -13,10 +13,11 @@ namespace AviasalesApi.Services.AirlineAdapters
                 .ForMember(dest => dest.PriceUsd, src => src.MapFrom(x => x.Dollars))
                 .ForMember(dest => dest.Departure, src => src.MapFrom(x => x.StartTime))
                 .ForMember(dest => dest.Arrival, src => src.MapFrom(x => x.FinishTime))
+                .ForMember(dest => dest.NumberOfFlights, src => src.MapFrom(x => x.AmountOfFlights))
             ).CreateMapper();
         public string ConstructRequestUrl(FlightInfo flightInfo) =>
             $"{Endpoint}?departurecity={flightInfo.FromCity}&arrivalcity={flightInfo.ToCity}&flightday={flightInfo.Date:dd-MM-yyyy}";
 
-        public record struct UzAirwaysFlight(float Dollars, DateTime StartTime, DateTime FinishTime);
+        public record struct UzAirwaysFlight(float Dollars, DateTime StartTime, DateTime FinishTime, int AmountOfFlights);
     }
 }

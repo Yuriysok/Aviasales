@@ -2,11 +2,19 @@
   {
     "Dollars": 35,
     "StartTime": "2024-01-01T01:25:43.511Z",
-    "FinishTime": "2024-01-02T04:25:43.511Z"
+    "FinishTime": "2024-01-01T04:25:43.511Z",
+    "AmountOfFlights": 1
   },
   {
     "Dollars": 30,
     "StartTime": "2024-01-01T07:25:43.511Z",
-    "FinishTime": "2024-01-02T10:25:43.511Z"
+    "FinishTime": "2024-01-01T10:25:43.511Z",
+    "AmountOfFlights": 1
+  },
+  {
+    "Dollars": 45,
+    "StartTime": "2024-01-01T08:25:43.511Z",
+    "FinishTime": "2024-01-01T15:25:43.511Z",
+    "AmountOfFlights": 3
   }
 ]

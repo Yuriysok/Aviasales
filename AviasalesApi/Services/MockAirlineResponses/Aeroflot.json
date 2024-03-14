@@ -1,12 +1,20 @@
 [
   {
     "PriceDollars": 20,
-    "DepartureTime": "2024-01-01T18:25:43.511Z",
-    "ArrivalTime": "2024-01-02T18:25:43.511Z"
+    "DepartureTime": "2024-01-01T17:25:43.511Z",
+    "ArrivalTime": "2024-01-01T21:25:43.511Z",
+    "FlightsNumber": 1
   },
   {
     "PriceDollars": 30,
-    "DepartureTime": "2024-01-01T20:25:43.511Z",
-    "ArrivalTime": "2024-01-02T20:25:43.511Z"
+    "DepartureTime": "2024-01-01T19:25:43.511Z",
+    "ArrivalTime": "2024-01-01T23:25:43.511Z",
+    "FlightsNumber": 1
+  },
+  {
+    "PriceDollars": 40,
+    "DepartureTime": "2024-01-01T02:25:43.511Z",
+    "ArrivalTime": "2024-01-01T08:25:43.511Z",
+    "FlightsNumber": 2
   }
 ]

@@ -5,6 +5,6 @@ namespace AviasalesApi.Options
     public static class CacheOptions
     {
         public static DistributedCacheEntryOptions DefaultExpiration =>
-            new() { AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(20) };
+            new() { AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(60) };
     }
 }

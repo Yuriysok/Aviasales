@@ -33,9 +33,9 @@ namespace AviasalesApi.Models
                 DepartureTimeTo = GetTimeOnlyParameter(nameof(FilterOptions.DepartureTimeTo)),
                 PriceFrom = ParseFromQueryOrDefault(nameof(FilterOptions.PriceFrom), float.Parse),
                 PriceTo = ParseFromQueryOrDefault(nameof(FilterOptions.PriceTo), float.Parse),
+                TransitFlightsMax = ParseFromQueryOrDefault(nameof(FilterOptions.TransitFlightsMax), int.Parse),
                 Airlines = airlines
             };
-
             var flightInfo = new FlightInfo
             {
                 FromCity = GetQueryParameter(nameof(FlightInfo.FromCity)),

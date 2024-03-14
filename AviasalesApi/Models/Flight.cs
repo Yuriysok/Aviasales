@@ -8,5 +8,6 @@ namespace AviasalesApi.Models
         public float PriceUsd { get; set; }
         public DateTime Departure { get; set; }
         public DateTime Arrival { get; set; }
+        public int NumberOfFlights { get; set; }
     }
 }

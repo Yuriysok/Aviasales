@@ -8,10 +8,11 @@ using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//builder.Services.AddAuthentication().AddJwtBearer();
-//builder.Services.AddAuthorizationBuilder()
-//  .AddFallbackPolicy("UserPolicy", policy =>
-//    policy.RequireClaim(ClaimTypes.Role, "User"));
+builder.Services.AddAuthentication().AddJwtBearer();
+builder.Services.AddAuthorizationBuilder()
+  //.AddFallbackPolicy("UserPolicy", policy =>
+  //  policy.RequireClaim(ClaimTypes.Role, "User"))
+  ;
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -49,7 +50,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapCarter();
-//app.UseAuthentication();
-//app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseHttpsRedirection();
 app.Run();

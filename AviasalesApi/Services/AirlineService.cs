@@ -60,14 +60,19 @@ namespace AviasalesApi.Services
             if (options.DepartureTimeTo != default)
                 result = result.Where(x => TimeOnly.FromDateTime(x.Departure) <= options.DepartureTimeTo);
 
+            if (options.TransitFlightsMax != default)
+                result = result.Where(x => x.NumberOfFlights <= options.TransitFlightsMax);
+
             if (options.Airlines!.Count != 0)
                 result = result.Where(x => options.Airlines.Contains(x.Airline));
 
             return result;
         }
 
-        private static IEnumerable<Flight> SortResult(IEnumerable<Flight> result, SortOptions options) =>
-            options switch
+        private static IEnumerable<Flight> SortResult(IEnumerable<Flight> result, SortOptions options)
+        {
+            result = result.OrderBy(x => x.NumberOfFlights);
+            return options switch
             {
                 SortOptions.None => result,
                 SortOptions.OrderByPriceAsc => result.OrderBy(x => x.PriceUsd),
@@ -79,6 +84,7 @@ namespace AviasalesApi.Services
                 SortOptions.OrderByArrivalDateAsc => result.OrderBy(x => x.Arrival),
                 SortOptions.OrderByArrivalDateDesc => result.OrderByDescending(x => x.Arrival),
                 _ => throw new ArgumentOutOfRangeException(nameof(options))
-            };  
+            };
+        }    
     }
 }

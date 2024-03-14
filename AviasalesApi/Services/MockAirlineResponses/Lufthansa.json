@@ -2,11 +2,19 @@
   {
     "PriceUsd": 18,
     "TakeoffTime": "2024-01-01T11:25:43.511Z",
-    "LandingTime": "2024-01-02T14:25:43.511Z"
+    "LandingTime": "2024-01-01T14:25:43.511Z",
+    "FlightNum": 1
   },
   {
     "PriceUsd": 22,
     "TakeoffTime": "2024-01-01T01:25:43.511Z",
-    "LandingTime": "2024-01-02T04:25:43.511Z"
+    "LandingTime": "2024-01-01T04:25:43.511Z",
+    "FlightNum": 1
+  },
+  {
+    "PriceUsd": 35,
+    "TakeoffTime": "2024-01-01T02:25:43.511Z",
+    "LandingTime": "2024-01-01T06:25:43.511Z",
+    "FlightNum": 2
   }
 ]

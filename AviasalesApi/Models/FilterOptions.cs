@@ -7,6 +7,7 @@
         TimeOnly DepartureTimeTo,
         TimeOnly ArrivalTimeFrom,
         TimeOnly ArrivalTimeTo,
+        int TransitFlightsMax,
         List<Airline>? Airlines
         );
 }
