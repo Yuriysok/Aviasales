@@ -1,6 +1,5 @@
 ﻿using AviasalesApi.Attributes;
 using AviasalesApi.Services;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AviasalesApi.Models
 {
@@ -25,25 +24,21 @@ namespace AviasalesApi.Models
             var airlines = new List<Airline>();
             if (airlinesFromQuery != null)
             {
-                var airlinesStr = airlinesFromQuery.Split(',');
-
-                var parsedAirlines = airlinesStr.Select(x => 
-                    Enum.TryParse<Airline>(x, out var value) 
-                    ? value
-                    : Airline.Undefined
-                ).Where(x => x != Airline.Undefined);
-
-                airlines.AddRange(parsedAirlines);
+                foreach (var airline in airlinesFromQuery.Split(','))
+                {
+                    if (Enum.TryParse<Airline>(airline, out var value))
+                        airlines.Add(value);
+                }
             }
 
             var filterOptions = new FilterOptions()
             {
-                ArrivalTimeFrom = GetDateTimeParameter(nameof(FilterOptions.ArrivalTimeFrom)),
-                ArrivalTimeTo = GetDateTimeParameter(nameof(FilterOptions.ArrivalTimeTo)),
-                DepartureTimeFrom = GetDateTimeParameter(nameof(FilterOptions.DepartureTimeFrom)),
-                DepartureTimeTo = GetDateTimeParameter(nameof(FilterOptions.DepartureTimeTo)),
-                PriceFrom = float.Parse(GetQueryParameter(nameof(FilterOptions.PriceFrom))),
-                PriceTo = float.Parse(GetQueryParameter(nameof(FilterOptions.PriceTo))),
+                ArrivalTimeFrom = GetTimeOnlyParameter(nameof(FilterOptions.ArrivalTimeFrom)),
+                ArrivalTimeTo = GetTimeOnlyParameter(nameof(FilterOptions.ArrivalTimeTo)),
+                DepartureTimeFrom = GetTimeOnlyParameter(nameof(FilterOptions.DepartureTimeFrom)),
+                DepartureTimeTo = GetTimeOnlyParameter(nameof(FilterOptions.DepartureTimeTo)),
+                PriceFrom = ParseFromQueryOrDefault(nameof(FilterOptions.PriceFrom), float.Parse),
+                PriceTo = ParseFromQueryOrDefault(nameof(FilterOptions.PriceTo), float.Parse),
                 Airlines = airlines
             };
 
@@ -51,10 +46,9 @@ namespace AviasalesApi.Models
             {
                 FromCity = GetQueryParameter(nameof(FromCity)),
                 ToCity = GetQueryParameter(nameof(ToCity)),
-                Date = GetDateTimeParameter(nameof(Date)),
+                Date = ParseFromQueryOrDefault(nameof(Date), DateTime.Parse),
                 SortOptions = sortOptions,
                 FilterOptions = filterOptions
-
             };
 
             return ValueTask.FromResult<GetFlightsDto?>(result);
@@ -62,13 +56,16 @@ namespace AviasalesApi.Models
             string GetQueryParameter(string name) =>
                 context.Request.Query[name]!;
 
-            DateTime GetDateTimeParameter(string name)
+            T ParseFromQueryOrDefault<T>(string name, Func<string, T> parseMethod)
             {
                 var parameter = GetQueryParameter(name);
                 return parameter != null
-                    ? DateTime.Parse(parameter)
-                    : default;
+                    ? parseMethod.Invoke(parameter)
+                    : default!;
             }
+
+            TimeOnly GetTimeOnlyParameter(string name) =>
+                ParseFromQueryOrDefault(name, TimeOnly.Parse);
         }
     }
 }

@@ -6,8 +6,8 @@ namespace AviasalesApi.Services
     {
         Task<IEnumerable<Flight>> GetAllFlightsAsync(
             GetFlightsDto getFlightsDto,
-            FilterOptions? filterOptions = null,
-            SortOptions sortOptions = SortOptions.None
+            FilterOptions filterOptions,
+            SortOptions sortOptions
             );
     }
 }

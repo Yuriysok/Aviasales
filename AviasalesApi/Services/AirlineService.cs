@@ -1,5 +1,6 @@
 ﻿using AviasalesApi.Models;
 using AviasalesApi.Services.AirlineAdapters;
+using System.Linq.Expressions;
 
 namespace AviasalesApi.Services
 {
@@ -10,8 +11,8 @@ namespace AviasalesApi.Services
 
         public async Task<IEnumerable<Flight>> GetAllFlightsAsync(
             GetFlightsDto getFlightsDto,
-            FilterOptions? filterOptions = null,
-            SortOptions sortOptions = SortOptions.None
+            FilterOptions filterOptions,
+            SortOptions sortOptions
             )
         {
             var flightTasks = new List<Task<List<Flight>>>();
@@ -39,30 +40,27 @@ namespace AviasalesApi.Services
             return (List<Flight>)adapter.ResponseMapper.Map(airlineFlightList, adapter.ResponseType, typeof(List<Flight>));
         }
 
-        private static IEnumerable<Flight> FilterResult(IEnumerable<Flight> result, FilterOptions? options)
+        private static IEnumerable<Flight> FilterResult(IEnumerable<Flight> result, FilterOptions options)
         {
-            if (options == null)
-                return result;
-
-            if (options.PriceFrom != 0)
+            if (options.PriceFrom != default)
                 result = result.Where(x => x.PriceUsd >= options.PriceFrom);
 
             if (options.PriceTo != default)
                 result = result.Where(x => x.PriceUsd <= options.PriceTo);
 
             if (options.ArrivalTimeFrom != default)
-                result = result.Where(x => x.Arrival >= options.ArrivalTimeFrom);
+                result = result.Where(x => TimeOnly.FromDateTime(x.Arrival) >= options.ArrivalTimeFrom);
 
-            if (options.ArrivalTimeFrom != default)
-                result = result.Where(x => x.Arrival >= options.ArrivalTimeTo);
-
-            if (options.DepartureTimeFrom != default)
-                result = result.Where(x => x.Departure >= options.DepartureTimeFrom);
+            if (options.ArrivalTimeTo != default)
+                result = result.Where(x => TimeOnly.FromDateTime(x.Arrival) <= options.ArrivalTimeTo);
 
             if (options.DepartureTimeFrom != default)
-                result = result.Where(x => x.Departure >= options.DepartureTimeTo);
+                result = result.Where(x => TimeOnly.FromDateTime(x.Departure) >= options.DepartureTimeFrom);
 
-            if (options.Airlines != null)
+            if (options.DepartureTimeTo != default)
+                result = result.Where(x => TimeOnly.FromDateTime(x.Departure) <= options.DepartureTimeTo);
+
+            if (options.Airlines!.Count != 0)
                 result = result.Where(x => options.Airlines.Contains(x.Airline));
 
             return result;
