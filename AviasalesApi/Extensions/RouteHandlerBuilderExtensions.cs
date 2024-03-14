@@ -3,7 +3,7 @@ using Castle.Core.Internal;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
-namespace AviasalesApi.Endpoints.Helpers
+namespace AviasalesApi.Extensions
 {
     public static class RouteHandlerBuilderExtensions
     {
@@ -25,7 +25,7 @@ namespace AviasalesApi.Endpoints.Helpers
                     {
                         AddProp(op, prop);
                     }
-                    
+
                 }
                 return op;
             });

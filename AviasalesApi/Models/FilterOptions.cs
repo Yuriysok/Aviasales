@@ -1,6 +1,4 @@
-﻿using AviasalesApi.Models;
-
-namespace AviasalesApi.Services
+﻿namespace AviasalesApi.Models
 {
     public record struct FilterOptions(
         float PriceFrom,

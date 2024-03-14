@@ -7,6 +7,6 @@ namespace AviasalesApi.Services.AirlineAdapters
     {
         Type ResponseType { get; }
         IMapper ResponseMapper { get; }
-        string ConstructRequestUrl(GetFlightsDto dto);
+        string ConstructRequestUrl(FlightInfo flightInfo);
     }
 }

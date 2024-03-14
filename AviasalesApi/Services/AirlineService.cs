@@ -10,7 +10,7 @@ namespace AviasalesApi.Services
         private readonly IEnumerable<IAirlineAdapter> _adapters = adapters;
 
         public async Task<IEnumerable<Flight>> GetAllFlightsAsync(
-            GetFlightsDto getFlightsDto,
+            FlightInfo flightInfo,
             FilterOptions filterOptions,
             SortOptions sortOptions
             )
@@ -19,7 +19,7 @@ namespace AviasalesApi.Services
 
             foreach (var adapter in _adapters)
             {
-                flightTasks.Add(GetFlights(adapter, getFlightsDto));
+                flightTasks.Add(GetFlights(adapter, flightInfo));
             }
 
             var allFlights = await Task.WhenAll(flightTasks);
@@ -32,9 +32,9 @@ namespace AviasalesApi.Services
 
             return result;
         }
-        private async Task<List<Flight>> GetFlights(IAirlineAdapter adapter, GetFlightsDto getFlightsDto)
+        private async Task<List<Flight>> GetFlights(IAirlineAdapter adapter, FlightInfo flightInfo)
         {
-            var requestUrl = adapter.ConstructRequestUrl(getFlightsDto);
+            var requestUrl = adapter.ConstructRequestUrl(flightInfo);
             var response = await Http.GetAsync(requestUrl);
             var airlineFlightList = await response.Content.ReadFromJsonAsync(adapter.ResponseType);
             return (List<Flight>)adapter.ResponseMapper.Map(airlineFlightList, adapter.ResponseType, typeof(List<Flight>));

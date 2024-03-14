@@ -5,7 +5,7 @@ namespace AviasalesApi.Services
     public interface IAirlineService
     {
         Task<IEnumerable<Flight>> GetAllFlightsAsync(
-            GetFlightsDto getFlightsDto,
+            FlightInfo flightInfo,
             FilterOptions filterOptions,
             SortOptions sortOptions
             );

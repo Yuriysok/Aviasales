@@ -14,8 +14,8 @@ namespace AviasalesApi.Services.AirlineAdapters
                 .ForMember(dest => dest.Departure, src => src.MapFrom(x => x.StartTime))
                 .ForMember(dest => dest.Arrival, src => src.MapFrom(x => x.FinishTime))
             ).CreateMapper();
-        public string ConstructRequestUrl(GetFlightsDto dto) =>
-            $"{Endpoint}?departurecity={dto.FromCity}&arrivalcity={dto.ToCity}&flightday={dto.Date:dd-MM-yyyy}";
+        public string ConstructRequestUrl(FlightInfo flightInfo) =>
+            $"{Endpoint}?departurecity={flightInfo.FromCity}&arrivalcity={flightInfo.ToCity}&flightday={flightInfo.Date:dd-MM-yyyy}";
 
         public record struct UzAirwaysFlight(float Dollars, DateTime StartTime, DateTime FinishTime);
     }

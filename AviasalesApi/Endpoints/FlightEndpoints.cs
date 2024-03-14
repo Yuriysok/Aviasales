@@ -1,9 +1,8 @@
-﻿using AviasalesApi.Endpoints.Helpers;
+﻿using AviasalesApi.Extensions;
 using AviasalesApi.Models;
 using AviasalesApi.Services;
 using Carter;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.OpenApi.Models;
 
 namespace AviasalesApi.Endpoints
 {
@@ -18,7 +17,7 @@ namespace AviasalesApi.Endpoints
 
         private async Task<Ok<IEnumerable<Flight>>> GetFlights(DataContext context, GetFlightsDto getFlightsDto)
         {
-            var flights = await _airlineService.GetAllFlightsAsync(getFlightsDto, getFlightsDto.FilterOptions, getFlightsDto.SortOptions);
+            var flights = await _airlineService.GetAllFlightsAsync(getFlightsDto.FlightInfo, getFlightsDto.FilterOptions, getFlightsDto.SortOptions);
             return TypedResults.Ok(flights);
         }
     }

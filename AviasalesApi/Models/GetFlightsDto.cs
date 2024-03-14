@@ -1,25 +1,19 @@
 ﻿using AviasalesApi.Attributes;
-using AviasalesApi.Services;
 
 namespace AviasalesApi.Models
 {
-    public record GetFlightsDto
+    public record struct GetFlightsDto
     {
-        public required string FromCity { get; set; }
-        public required string ToCity { get; set; }
-        public required DateTime Date { get; set; }
-        public SortOptions SortOptions { get; set; }
+        [ComplexProperty]
+        public FlightInfo FlightInfo { get; set; }
+
         [ComplexProperty]
         public FilterOptions FilterOptions { get; set; }
 
+        public SortOptions SortOptions { get; set; }
+
         public static ValueTask<GetFlightsDto?> BindAsync(HttpContext context)
         {
-            var sortOptionsFromQuery = GetQueryParameter(nameof(SortOptions));
-
-            var sortOptions = sortOptionsFromQuery == null
-                ? SortOptions.None
-                : Enum.Parse<SortOptions>(sortOptionsFromQuery);
-
             var airlinesFromQuery = GetQueryParameter(nameof(FilterOptions.Airlines));
             var airlines = new List<Airline>();
             if (airlinesFromQuery != null)
@@ -42,13 +36,18 @@ namespace AviasalesApi.Models
                 Airlines = airlines
             };
 
+            var flightInfo = new FlightInfo
+            {
+                FromCity = GetQueryParameter(nameof(FlightInfo.FromCity)),
+                ToCity = GetQueryParameter(nameof(FlightInfo.ToCity)),
+                Date = ParseFromQueryOrDefault(nameof(FlightInfo.Date), DateTime.Parse),
+            };
+
             var result = new GetFlightsDto
             {
-                FromCity = GetQueryParameter(nameof(FromCity)),
-                ToCity = GetQueryParameter(nameof(ToCity)),
-                Date = ParseFromQueryOrDefault(nameof(Date), DateTime.Parse),
-                SortOptions = sortOptions,
-                FilterOptions = filterOptions
+                FlightInfo = flightInfo,
+                FilterOptions = filterOptions,
+                SortOptions = ParseFromQueryOrDefault(nameof(SortOptions), Enum.Parse<SortOptions>)
             };
 
             return ValueTask.FromResult<GetFlightsDto?>(result);

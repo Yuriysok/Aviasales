@@ -17,7 +17,7 @@ namespace Aviasales.Test
         public void ConstructRequestUrl_Test(Type adapterType, string expectedResult)
         {
             // Arrange
-            GetFlightsDto dto = new()
+            FlightInfo flightInfo = new()
             {
                 Date = DateTime.Parse("2024/01/01"),
                 FromCity = "Tashkent",
@@ -27,7 +27,7 @@ namespace Aviasales.Test
             IAirlineAdapter adapter = (IAirlineAdapter)Activator.CreateInstance(adapterType)!;
 
             // Act
-            var result = adapter.ConstructRequestUrl(dto);
+            var result = adapter.ConstructRequestUrl(flightInfo);
 
             //Assert
             result.Should().Be(expectedResult);
