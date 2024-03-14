@@ -35,9 +35,9 @@ namespace AviasalesApi.Endpoints
             var newUser = new User
             {
                 Name = userDto.Name,
-                PasswordHash = passwordHash
+                PasswordHash = passwordHash,
+                PassportSerialNumber = userDto.PassportSerialNumber
             };
-            ;
             context.Users.Add(newUser);
 
             try

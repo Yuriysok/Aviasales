@@ -1,4 +1,5 @@
 ﻿using AviasalesApi.Models;
+using System.Net;
 
 namespace AviasalesApi.Services
 {
@@ -9,5 +10,7 @@ namespace AviasalesApi.Services
             FilterOptions filterOptions,
             SortOptions sortOptions
             );
+
+        Task<HttpStatusCode> BookFlightAsync(BookFlightDto bookFlightDto);
     }
 }
