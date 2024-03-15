@@ -1,17 +1,20 @@
 [
   {
+    "Guid": "0f163a5e-93c2-4350-9de4-1bae3728eb65",
     "PriceDollars": 20,
     "DepartureTime": "2024-01-01T17:25:43.511Z",
     "ArrivalTime": "2024-01-01T21:25:43.511Z",
     "FlightsNumber": 1
   },
   {
+    "Guid": "8facac16-5109-4213-b2da-8c55041b9d52",
     "PriceDollars": 30,
     "DepartureTime": "2024-01-01T19:25:43.511Z",
     "ArrivalTime": "2024-01-01T23:25:43.511Z",
     "FlightsNumber": 1
   },
   {
+    "Guid": "b9bb9aa9-c107-4b5f-8f21-e993c11de04e",
     "PriceDollars": 40,
     "DepartureTime": "2024-01-01T02:25:43.511Z",
     "ArrivalTime": "2024-01-01T08:25:43.511Z",

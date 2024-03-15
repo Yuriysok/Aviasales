@@ -32,6 +32,16 @@ namespace AviasalesApi.Services
 
             return result;
         }
+
+        public async Task<HttpStatusCode> BookFlightAsync(BookFlightDto bookFlightDto)
+        {
+            var adapter = _adapters.Single(x => x.Airline == bookFlightDto.Airline);
+            var bookingRequestUrl = adapter.BookingUrl;
+            var dto = adapter.GetBookingJson(bookFlightDto);
+            var response = await Http.PostAsJsonAsync(bookingRequestUrl, dto);
+            return response.StatusCode;
+        }
+
         private async Task<List<Flight>> GetFlights(IAirlineAdapter adapter, FlightInfo flightInfo)
         {
             var requestUrl = adapter.ConstructRequestUrl(flightInfo);
@@ -85,15 +95,6 @@ namespace AviasalesApi.Services
                 SortOptions.OrderByArrivalDateDesc => result.OrderByDescending(x => x.Arrival),
                 _ => throw new ArgumentOutOfRangeException(nameof(options))
             };
-        }
-
-        public async Task<HttpStatusCode> BookFlightAsync(BookFlightDto bookFlightDto)
-        {
-            var adapter = _adapters.Single(x => x.Airline == bookFlightDto.Airline);
-            var bookingRequestUrl = adapter.BookingUrl;
-            var dto = adapter.GetBookingJson(bookFlightDto);
-            var response = await Http.PostAsJsonAsync(bookingRequestUrl, dto);
-            return response.StatusCode;
         }
     }
 }

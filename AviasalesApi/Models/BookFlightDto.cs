@@ -2,7 +2,7 @@
 {
     public record struct BookFlightDto(
         Airline Airline,
-        Guid FlightId,
+        string FlightId,
         string Name,
         string PassportSerialNumber
         );
