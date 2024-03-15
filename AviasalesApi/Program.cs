@@ -2,18 +2,28 @@ using AviasalesApi;
 using AviasalesApi.Extensions;
 using AviasalesApi.Services;
 using Carter;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Swashbuckle.AspNetCore.Filters;
 using System.Security.Claims;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddAuthentication().AddJwtBearer();
-//builder.Services.AddAuthorization();
+builder.Services.AddAuthentication().AddJwtBearer(options => 
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+    {
+        ValidateIssuerSigningKey = true,
+        ValidateAudience = false,
+        ValidateIssuer = false,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+            builder.Configuration.GetValue<string>("Jwt")!))
+    });
+builder.Services.AddAuthorization();
+
 builder.Services.AddAuthorizationBuilder()
   .AddFallbackPolicy("UserPolicy", policy =>
-    policy.RequireClaim(ClaimTypes.Role, "User"))
-  ;
+    policy.RequireClaim(ClaimTypes.Role, "User"));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
