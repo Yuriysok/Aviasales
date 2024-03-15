@@ -1,5 +1,5 @@
 ﻿global using Microsoft.EntityFrameworkCore;
-using AviasalesApi.Models;
+using AviasalesApi.Models.DB;
 
 namespace AviasalesApi
 {

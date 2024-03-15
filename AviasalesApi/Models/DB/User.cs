@@ -1,4 +1,4 @@
-﻿namespace AviasalesApi.Models
+﻿namespace AviasalesApi.Models.DB
 {
     [Index(nameof(Name), IsUnique = true)]
     [Index(nameof(PassportSerialNumber), IsUnique = true)]

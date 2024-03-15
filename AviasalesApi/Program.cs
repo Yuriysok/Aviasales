@@ -9,9 +9,10 @@ using System.Security.Claims;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthentication().AddJwtBearer();
+//builder.Services.AddAuthorization();
 builder.Services.AddAuthorizationBuilder()
-  //.AddFallbackPolicy("UserPolicy", policy =>
-  //  policy.RequireClaim(ClaimTypes.Role, "User"))
+  .AddFallbackPolicy("UserPolicy", policy =>
+    policy.RequireClaim(ClaimTypes.Role, "User"))
   ;
 
 builder.Services.AddEndpointsApiExplorer();

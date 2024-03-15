@@ -3,6 +3,7 @@ using AviasalesApi.Models;
 using AviasalesApi.Services;
 using Carter;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AviasalesApi.Endpoints
 {
@@ -12,8 +13,10 @@ namespace AviasalesApi.Endpoints
         {
             var userGroup = app.MapGroup("api/flights");
             userGroup.MapGet("", GetFlights)
+                .AllowAnonymous()
                 .WithOpenApiCustomParameters(typeof(GetFlightsDto));
-            userGroup.MapPost("", BookFlight);
+            userGroup.MapPost("", BookFlight)
+                .RequireAuthorization();
         }
 
         private async Task<Ok<IEnumerable<Flight>>> GetFlights(DataContext context, GetFlightsDto getFlightsDto)
@@ -22,7 +25,7 @@ namespace AviasalesApi.Endpoints
             return TypedResults.Ok(flights);
         }
 
-        private async Task<StatusCodeHttpResult> BookFlight(DataContext context, [AsParameters]BookFlightDto bookFlightDto)
+        private async Task<StatusCodeHttpResult> BookFlight(DataContext context, [FromBody]BookFlightDto bookFlightDto)
         {
             var result = await _airlineService.BookFlightAsync(bookFlightDto);
             return TypedResults.StatusCode((int)result);

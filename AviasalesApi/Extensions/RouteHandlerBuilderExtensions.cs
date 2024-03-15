@@ -7,29 +7,20 @@ namespace AviasalesApi.Extensions
 {
     public static class RouteHandlerBuilderExtensions
     {
-        public static void WithOpenApiCustomParameters(this RouteHandlerBuilder builder, Type type)
-        {
+        public static RouteHandlerBuilder WithOpenApiCustomParameters(this RouteHandlerBuilder builder, Type type) =>
             builder.WithOpenApi(op =>
             {
                 var props = type.GetProperties();
                 foreach (var prop in props)
                 {
                     if (prop.GetAttribute<ComplexPropertyAttribute>() != null)
-                    {
                         foreach (var nestedProp in prop.PropertyType.GetProperties())
-                        {
                             AddProp(op, nestedProp);
-                        }
-                    }
                     else
-                    {
                         AddProp(op, prop);
-                    }
-
                 }
                 return op;
             });
-        }
 
         private static void AddProp(OpenApiOperation op, PropertyInfo prop)
         {

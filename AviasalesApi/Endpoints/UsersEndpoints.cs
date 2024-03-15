@@ -1,4 +1,5 @@
 ﻿using AviasalesApi.Models;
+using AviasalesApi.Models.DB;
 using Carter;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Data.SqlClient;
@@ -27,7 +28,7 @@ namespace AviasalesApi.Endpoints
             authGroup.MapPost("login", Login);
         }
 
-        private async Task<Results<Ok, BadRequest<string>>> Register(DataContext context, UserDto userDto)
+        private async Task<Results<Ok, BadRequest<string>>> Register(DataContext context, RegisterUserDto userDto)
         {
             const int DuplicateInsertErrorNumber = 2601;
 
@@ -53,7 +54,7 @@ namespace AviasalesApi.Endpoints
             return TypedResults.Ok();
         }
 
-        private async Task<Results<Ok<string>, BadRequest<string>>> Login(DataContext context, UserDto userDto)
+        private async Task<Results<Ok<string>, BadRequest<string>>> Login(DataContext context, LoginUserDto userDto)
         {
             var badRequestError = TypedResults.BadRequest("Wrong login or password");
 

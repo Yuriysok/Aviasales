@@ -43,15 +43,19 @@ namespace Aviasales.Test
             var departureDate = DateTime.Parse("2024/01/01 10:00:00");
             var arrivalDate = DateTime.Parse("2024/01/01 13:00:00");
             var priceUsd = 10;
+            var flightId = "111";
+            var NumberOfFlights = 1;
 
-            var airlineFlight = Activator.CreateInstance(flightType, priceUsd, departureDate, arrivalDate);
+            var airlineFlight = Activator.CreateInstance(flightType, flightId, priceUsd, departureDate, arrivalDate, NumberOfFlights);
 
             var expectedResult = new Flight
             {
+                FlightId = flightId,
                 Airline = resultAirline,
                 Departure = departureDate,
                 Arrival = arrivalDate,
-                PriceUsd = priceUsd
+                PriceUsd = priceUsd,
+                NumberOfFlights = NumberOfFlights
             };
 
             IAirlineAdapter adapter = (IAirlineAdapter)Activator.CreateInstance(adapterType)!;
