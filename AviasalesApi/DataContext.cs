@@ -1,9 +1,10 @@
 ﻿global using Microsoft.EntityFrameworkCore;
 using AviasalesApi.Models.DB;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace AviasalesApi
 {
-    public class DataContext(DbContextOptions options, IConfiguration config) : DbContext(options)
+    public class DataContext(DbContextOptions options, IConfiguration config) : IdentityDbContext(options)
     {
         private readonly IConfiguration _config = config;
 
@@ -12,6 +13,6 @@ namespace AviasalesApi
             optionsBuilder.UseNpgsql(_config.GetConnectionString("PostgresConnection"));
         }
 
-        public DbSet<User> Users => Set<User>();
+        //public DbSet<User> Users => Set<User>();
     }
 }

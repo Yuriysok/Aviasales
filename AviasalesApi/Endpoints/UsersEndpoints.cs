@@ -17,7 +17,7 @@ namespace AviasalesApi.Endpoints
         {
             var userGroup = app.MapGroup("api/users");
 
-            userGroup.MapGet("", GetUsers).AllowAnonymous();
+            //userGroup.MapGet("", GetUsers).AllowAnonymous();
             //userGroup.MapGet("{id}", GetUser);
             //userGroup.MapPut("", PutUser);
             //userGroup.MapDelete("{id}", DeleteUser);
@@ -25,7 +25,7 @@ namespace AviasalesApi.Endpoints
             var authGroup = app.MapGroup("auth");
             authGroup.AllowAnonymous();
             authGroup.MapPut("register", Register);
-            authGroup.MapPost("login", Login);
+            //authGroup.MapPost("login", Login);
         }
 
         private async Task<Results<Ok, BadRequest<string>>> Register(DataContext context, RegisterUserDto userDto)
@@ -39,7 +39,7 @@ namespace AviasalesApi.Endpoints
                 PasswordHash = passwordHash,
                 PassportSerialNumber = userDto.PassportSerialNumber
             };
-            context.Users.Add(newUser);
+            //context.Users.Add(newUser);
 
             try
             {
@@ -54,23 +54,23 @@ namespace AviasalesApi.Endpoints
             return TypedResults.Ok();
         }
 
-        private async Task<Results<Ok<string>, BadRequest<string>>> Login(DataContext context, LoginUserDto userDto)
-        {
-            var badRequestError = TypedResults.BadRequest("Wrong login or password");
+        //private async Task<Results<Ok<string>, BadRequest<string>>> Login(DataContext context, LoginUserDto userDto)
+        //{
+        //    var badRequestError = TypedResults.BadRequest("Wrong login or password");
 
-            var user = await context.Users.SingleOrDefaultAsync(user => user.Name == userDto.Name);
-            if (user == null)
-                return badRequestError;
+        //    var user = await context.Users.SingleOrDefaultAsync(user => user.Name == userDto.Name);
+        //    if (user == null)
+        //        return badRequestError;
 
-            if (!BCrypt.Net.BCrypt.Verify(userDto.Password, user.PasswordHash))
-            {
-                return badRequestError;
-            }
+        //    if (!BCrypt.Net.BCrypt.Verify(userDto.Password, user.PasswordHash))
+        //    {
+        //        return badRequestError;
+        //    }
 
-            var token = CreateToken(user);
+        //    var token = CreateToken(user);
 
-            return TypedResults.Ok(token);
-        }
+        //    return TypedResults.Ok(token);
+        //}
 
         private string CreateToken(User user)
         {
@@ -90,38 +90,38 @@ namespace AviasalesApi.Endpoints
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private async Task<Ok<List<User>>> GetUsers(DataContext context, IDistributedCache cache, CancellationToken ct)
-        {
-            var users = await cache.GetAsync("users",
-                async token =>
-                {
-                    var users = await context.Users.ToListAsync(token);
-                    return users;
-                }, Options.CacheOptions.DefaultExpiration, ct);
+        //private async Task<Ok<List<User>>> GetUsers(DataContext context, IDistributedCache cache, CancellationToken ct)
+        //{
+        //    var users = await cache.GetAsync("users",
+        //        async token =>
+        //        {
+        //            var users = await context.Users.ToListAsync(token);
+        //            return users;
+        //        }, Options.CacheOptions.DefaultExpiration, ct);
 
-            return TypedResults.Ok(users);
-        }
+        //    return TypedResults.Ok(users);
+        //}
 
-        private async Task<Results<Ok<User>, NotFound<string>>> GetUser(DataContext context, int id)
-        {
-            var result = await context.Users.FindAsync(id);
-            return result != null
-                ? TypedResults.Ok(result)
-                : TypedResults.NotFound($"User with id = {id} not found");
-        }
+        //private async Task<Results<Ok<User>, NotFound<string>>> GetUser(DataContext context, int id)
+        //{
+        //    var result = await context.Users.FindAsync(id);
+        //    return result != null
+        //        ? TypedResults.Ok(result)
+        //        : TypedResults.NotFound($"User with id = {id} not found");
+        //}
 
-        private async Task<IResult> PutUser(DataContext context, User user)
-        {
-            context.Users.Add(user);
-            await context.SaveChangesAsync();
-            return Results.Ok();
-        }
+        //private async Task<IResult> PutUser(DataContext context, User user)
+        //{
+        //    context.Users.Add(user);
+        //    await context.SaveChangesAsync();
+        //    return Results.Ok();
+        //}
 
-        private async Task<IResult> DeleteUser(DataContext context, int id)
-        {
-            context.Users.Where(user => user.Id == id).ExecuteDelete();
-            await context.SaveChangesAsync();
-            return Results.Ok();
-        }
+        //private async Task<IResult> DeleteUser(DataContext context, int id)
+        //{
+        //    context.Users.Where(user => user.Id == id).ExecuteDelete();
+        //    await context.SaveChangesAsync();
+        //    return Results.Ok();
+        //}
     }
 }

@@ -1,17 +1,20 @@
 using AviasalesApi;
+using AviasalesApi.Auth;
 using AviasalesApi.Extensions;
 using AviasalesApi.Services;
 using Carter;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Swashbuckle.AspNetCore.Filters;
-using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddAuthentication().AddJwtBearer(options => 
-    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication().AddJwtBearer(options =>
+    options.TokenValidationParameters = new TokenValidationParameters()
     {
         ValidateIssuerSigningKey = true,
         ValidateAudience = false,
@@ -19,11 +22,21 @@ builder.Services.AddAuthentication().AddJwtBearer(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
             builder.Configuration.GetValue<string>("Jwt")!))
     });
-builder.Services.AddAuthorization();
 
-builder.Services.AddAuthorizationBuilder()
-  .AddFallbackPolicy("UserPolicy", policy =>
-    policy.RequireClaim(ClaimTypes.Role, "User"));
+
+builder.Services.AddIdentityApiEndpoints<ApplicationUser>(options =>
+{
+    options.Password.RequiredUniqueChars = 0;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireDigit = false;
+})
+    .AddEntityFrameworkStores<DataContext>()
+    .AddDefaultTokenProviders();
+
+
+//builder.Services.AddAuthorizationBuilder()
+//  .AddFallbackPolicy("UserPolicy", policy =>
+//    policy.RequireClaim(ClaimTypes.Role, "User"));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -61,6 +74,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapCarter();
+app.MapIdentityApi<ApplicationUser>();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseHttpsRedirection();
