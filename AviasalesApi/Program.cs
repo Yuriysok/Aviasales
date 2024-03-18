@@ -5,7 +5,6 @@ using Carter;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Swashbuckle.AspNetCore.Filters;
-using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,8 +21,9 @@ builder.Services.AddAuthentication().AddJwtBearer(options =>
 builder.Services.AddAuthorization();
 
 builder.Services.AddAuthorizationBuilder()
-  .AddFallbackPolicy("UserPolicy", policy =>
-    policy.RequireClaim(ClaimTypes.Role, "User"));
+  //.AddFallbackPolicy("UserPolicy", policy =>
+  //  policy.RequireClaim(ClaimTypes.Role, "User"))
+  ;
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -47,6 +47,8 @@ Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration).CreateLogger();
 
 builder.Host.UseSerilog();
+builder.Services.AddRazorPages();
+//builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
@@ -58,7 +60,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
     app.ApplyMigrations();
+    app.UseWebAssemblyDebugging();
 }
+
+app.UseBlazorFrameworkFiles();
+app.UseStaticFiles();
+app.MapRazorPages();
+app.MapFallbackToFile("index.html");
+//app.MapControllers();
 
 app.MapCarter();
 app.UseAuthentication();

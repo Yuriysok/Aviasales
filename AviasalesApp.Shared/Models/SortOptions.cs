@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-
-namespace AviasalesApi.Models
+﻿namespace AviasalesApi.Models
 {
     public enum SortOptions
     {

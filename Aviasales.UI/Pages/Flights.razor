@@ -1,0 +1,46 @@
+﻿@page "/flights"
+@inject HttpClient Http
+
+<PageTitle>Flights</PageTitle>
+
+<h1>Flights</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (flights == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Airline</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+                <th>PriceUsd</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var flight in flights)
+            {
+                <tr>
+                    <td>@flight.Airline</td>
+                    <td>@flight.Departure</td>
+                    <td>@flight.Arrival</td>
+                    <td>@flight.PriceUsd</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Flight>? flights;
+
+    protected override async Task OnInitializedAsync()
+    {
+        flights = await Http.GetFromJsonAsync<List<Flight>>("api/flights");
+    }
+}

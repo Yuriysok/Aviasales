@@ -90,7 +90,7 @@ namespace AviasalesApi.Endpoints
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private async Task<Ok<List<User>>> GetUsers(DataContext context, IDistributedCache cache, CancellationToken ct)
+        private async Task<Ok<List<RegisterUserDto>>> GetUsers(DataContext context, IDistributedCache cache, CancellationToken ct)
         {
             var users = await cache.GetAsync("users",
                 async token =>
@@ -99,7 +99,14 @@ namespace AviasalesApi.Endpoints
                     return users;
                 }, Options.CacheOptions.DefaultExpiration, ct);
 
-            return TypedResults.Ok(users);
+            var result = users.Select(x => new RegisterUserDto
+            {
+                Name = x.Name,
+                PassportSerialNumber = x.PassportSerialNumber,
+                Password = x.PasswordHash
+            }).ToList();
+
+            return TypedResults.Ok(result);
         }
 
         private async Task<Results<Ok<User>, NotFound<string>>> GetUser(DataContext context, int id)

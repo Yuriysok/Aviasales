@@ -7,7 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AviasalesApi", "AviasalesAp
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{18C7AC07-A428-46F3-9A82-833C7E41F29C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aviasales.Test", "Aviasales.Test\Aviasales.Test.csproj", "{042589AC-37E1-41D5-B204-85FE30BFC3E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aviasales.Test", "Aviasales.Test\Aviasales.Test.csproj", "{042589AC-37E1-41D5-B204-85FE30BFC3E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aviasales.UI", "Aviasales.UI\Aviasales.UI.csproj", "{576CC6D3-663D-4D22-BA74-3C99C28D94B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AviasalesApp.Shared", "AviasalesApp.Shared\AviasalesApp.Shared.csproj", "{05095EF5-3BDD-4966-B754-F57592D3E358}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,14 @@ Global
 		{042589AC-37E1-41D5-B204-85FE30BFC3E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{042589AC-37E1-41D5-B204-85FE30BFC3E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{042589AC-37E1-41D5-B204-85FE30BFC3E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{576CC6D3-663D-4D22-BA74-3C99C28D94B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{576CC6D3-663D-4D22-BA74-3C99C28D94B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{576CC6D3-663D-4D22-BA74-3C99C28D94B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{576CC6D3-663D-4D22-BA74-3C99C28D94B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05095EF5-3BDD-4966-B754-F57592D3E358}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05095EF5-3BDD-4966-B754-F57592D3E358}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05095EF5-3BDD-4966-B754-F57592D3E358}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05095EF5-3BDD-4966-B754-F57592D3E358}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
