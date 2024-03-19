@@ -16,7 +16,8 @@ namespace AviasalesApi.Endpoints
                 .AllowAnonymous()
                 .WithOpenApiCustomParameters(typeof(GetFlightsDto));
             userGroup.MapPost("", BookFlight)
-                .RequireAuthorization();
+                //.RequireAuthorization()
+                .AllowAnonymous();
         }
 
         private async Task<Ok<IEnumerable<Flight>>> GetFlights(DataContext context, GetFlightsDto getFlightsDto)

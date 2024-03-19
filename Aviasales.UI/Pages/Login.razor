@@ -1,0 +1,37 @@
+﻿@* @layout LoginLayout *@
+@page "/login"
+@inject HttpClient Http
+<h3>Login</h3>
+
+<EditForm>
+    <div class="mb-3">
+        <label>User name</label>
+        <InputText @bind-Value="Name"></InputText>
+    </div>
+    <div class="mb-3">
+        <label>Password</label>
+        <InputText @bind-Value="Password"></InputText>
+    </div>
+    <div class="mb-3">
+        <button type="submit" onclick="@Auth()">Login</button>
+    </div>
+</EditForm>
+
+@code {
+    string Name { get; set; } = "";
+    string Password { get; set; } = "";
+
+    private async Task Auth()
+    {
+        if (!string.IsNullOrEmpty(Name)
+            && !string.IsNullOrEmpty(Password))
+        {
+            var dto = new LoginUserDto
+                {
+                    Name = Name,
+                    Password = Password
+                };
+            await Http.PostAsJsonAsync<LoginUserDto>("auth/login", dto);
+        }
+    }
+}

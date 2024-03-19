@@ -20,6 +20,7 @@ else
                 <th>Departure</th>
                 <th>Arrival</th>
                 <th>PriceUsd</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -30,6 +31,7 @@ else
                     <td>@flight.Departure</td>
                     <td>@flight.Arrival</td>
                     <td>@flight.PriceUsd</td>
+                    <td><button onclick="@Book(flight.Airline, flight.FlightId)">Book</button></td>
                 </tr>
             }
         </tbody>
@@ -42,5 +44,14 @@ else
     protected override async Task OnInitializedAsync()
     {
         flights = await Http.GetFromJsonAsync<List<Flight>>("api/flights");
+    }
+
+    public async Task Book(Airline airline, string flightId)
+    {
+        Console.WriteLine($"Booking {airline}, id = {flightId}");
+        var dto = new BookFlightDto(airline, flightId, "TestName", "TestSerialNumber");
+
+        var response = await Http.PostAsJsonAsync<BookFlightDto>("api/flights", dto);
+        Console.WriteLine($"Response code {response.StatusCode}");
     }
 }
